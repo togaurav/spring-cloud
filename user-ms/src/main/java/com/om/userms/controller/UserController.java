@@ -23,17 +23,16 @@ import java.util.Map;
 public class UserController {
 
     private final Environment env;
-    private Map<String, Map<String, String>> users = Map.of();
+    private Map<String, Map<String, String>> users = new HashMap<>();
 
-    @GetMapping(path = "{id}", produces = {MediaType.ALL_VALUE})
-    public ResponseEntity<Object> get(@NotNull String id) {
+    @GetMapping(path = "{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> get(@NotNull @PathVariable String id) {
         log.info("Port : {}", env.getProperty("local.server.port"));
-        val user = new HashMap<>();
         return ResponseEntity.ok(users.get(id));
     }
 
-    @PostMapping(produces = {MediaType.ALL_VALUE})
-    public ResponseEntity<Object> save(@NotNull Map<String, String> responseBody) {
+    @PostMapping(produces = {MediaType.ALL_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> save(@NotNull @RequestBody Map<String, String> responseBody) {
         log.info(responseBody.toString());
         users.put(responseBody.get("id"), responseBody);
         return ResponseEntity.ok(responseBody);
